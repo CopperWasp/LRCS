@@ -1,0 +1,1 @@
+awk 'BEGIN { FS = OFS = "\t" } { for(i=1; i<=NF; i++) if($i == "-") $i = "\N" }; 1' scimagojr_sheet0.csv

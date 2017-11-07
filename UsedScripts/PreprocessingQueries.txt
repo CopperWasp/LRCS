@@ -1,0 +1,42 @@
+Preprocessing Queries
+#Select Computer Science Related Publications
+#Copy elsevier and cwts, insert only specific condition for cs area records
+INSERT INTO elsevier_processed2 SELECT * FROM elsevier_processed WHERE `Scopus ASJC Code (Sub-subject Area)` REGEXP '17..'
+#same for cwts
+CREATE TABLE cwts_processed LIKE cwts;
+INSERT INTO cwts_processed 
+SELECT * FROM cwts WHERE (INSTR(`ASJC field IDs` , '1700') > 0) OR 
+						 
+(INSTR(`ASJC field IDs` , '1701') > 0) OR
+						 
+(INSTR(`ASJC field IDs` , '1702') > 0) OR
+						 
+(INSTR(`ASJC field IDs` , '1703') > 0) OR
+						 
+(INSTR(`ASJC field IDs` , '1704') > 0) OR
+						 
+(INSTR(`ASJC field IDs` , '1705') > 0) OR
+						 
+(INSTR(`ASJC field IDs` , '1706') > 0) OR 
+						 
+(INSTR(`ASJC field IDs` , '1707') > 0) OR
+						 
+(INSTR(`ASJC field IDs` , '1708') > 0) OR
+						 
+(INSTR(`ASJC field IDs` , '1709') > 0) OR
+						 
+(INSTR(`ASJC field IDs` , '1710') > 0) OR
+						 
+(INSTR(`ASJC field IDs` , '1711') > 0) OR
+                         
+(INSTR(`ASJC field IDs` , '1712') > 0)
+
+#Duplicate removal by adding PK's
+1.CREATE TABLE elsevier_processed LIKE elsevier;
+2.Add pk's to empty table: Scopus Source ID, ASJC code, Quartile(changed to varchar(12)), year_auto
+3.Insert rows ignoring duplicates from old to new: INSERT IGNORE INTO elsevier_processed SELECT * FROM elsevier
+
+#Because CCF is pdf and hard to extract data, remove bad entries
+SELECT * FROM larank.ccf WHERE INSTR(`URL` , 'http') > 0
+
+#CORE and SCIMAGO do not have duplicates and only have CS related publications.
